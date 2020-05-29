@@ -1,4 +1,6 @@
 const path = require('path')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const globImporter = require('node-sass-glob-importer')
 
 module.exports = {
   entry: {
@@ -9,16 +11,47 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: "/dist"
   },
+  devServer: {
+    overlay: true,
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: '/node_modules/',
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          'style-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true }
+          },
+          {
+            loader: 'postcss-loader',
+            options: { sourceMap: true, config: { path: 'src/js/config/postcss.config.js' } }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                importer: globImporter()
+              },
+            }
+          }
+        ]
       }
-    ]
+    ],
   },
-  devServer: {
-    overlay: true,
-  }
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    })
+  ],
+
+
 }
