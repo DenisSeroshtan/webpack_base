@@ -1,3 +1,5 @@
-import './js/common.js'
+//js
+import './js/'
 
-import './scss/main.scss'
+//style
+import './assets/scss/main.scss'
