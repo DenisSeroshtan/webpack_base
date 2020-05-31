@@ -1,6 +1,9 @@
 const path = require('path')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const globImporter = require('node-sass-glob-importer')
+const PATHS = {
+  
+}
 
 module.exports = {
   entry: {
@@ -10,9 +13,6 @@ module.exports = {
     filename: "[name].js",
     path: path.resolve(__dirname, './dist'),
     publicPath: "/dist"
-  },
-  devServer: {
-    overlay: true,
   },
   module: {
     rules: [
@@ -52,6 +52,5 @@ module.exports = {
       filename: "[name].css",
     })
   ],
-
 
 }
