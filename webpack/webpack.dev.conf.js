@@ -7,6 +7,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
+    contentBase: baseWebpackConfig.externals.paths.dist,
     // historyApiFallback: true,
     // noInfo: true,
     overlay: {

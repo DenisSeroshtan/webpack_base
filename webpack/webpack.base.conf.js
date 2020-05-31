@@ -1,18 +1,27 @@
 const path = require('path')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const globImporter = require('node-sass-glob-importer')
+
+// global paths
 const PATHS = {
-  
-}
+  src: path.join(__dirname, "../src"),
+  dist: path.join(__dirname, "../dist"),
+  assets: "assets/"
+};
 
 module.exports = {
+  externals: {
+    paths: PATHS,
+  },
   entry: {
-    app: './src/index.js'
+    app: PATHS.src,
   },
   output: {
-    filename: "[name].js",
-    path: path.resolve(__dirname, './dist'),
-    publicPath: "/dist"
+    filename: `${PATHS.assets}js/[name].js`,
+    path: PATHS.dist,
+    publicPath: "/"
   },
   module: {
     rules: [
@@ -22,6 +31,15 @@ module.exports = {
         exclude: '/node_modules/',
       },
       {
+        // images / icons
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]"
+        }
+      },
+      {
+        // scss
         test: /\.s[ac]ss$/i,
         use: [
           'style-loader',
@@ -32,7 +50,7 @@ module.exports = {
           },
           {
             loader: 'postcss-loader',
-            options: { sourceMap: true, config: { path: 'src/js/config/postcss.config.js' } }
+            options: { sourceMap: true, config: { path: `${PATHS.src}/js/config/postcss.config.js`} }
           },
           {
             loader: 'sass-loader',
@@ -49,7 +67,25 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: `${PATHS.assets}css/[name].css`,
+    }),
+    new HtmlWebpackPlugin({
+      hash: false,
+      minify: false,
+      template: `${PATHS.src}/index.html`,
+      filename: "./index.html"
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: `${PATHS.src}/img`,
+          to: `${PATHS.assets}img`
+        },
+        {
+          from: `${PATHS.src}/static`,
+          to: ''
+        },
+      ]
     })
   ],
 
